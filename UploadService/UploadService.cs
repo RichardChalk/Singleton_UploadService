@@ -8,14 +8,21 @@ namespace UploadService
 {
     public class UploadService
     {
-        private UploadService() {}
+        private UploadService() { }
         private static UploadService _instance;
+        private static readonly object _lock = new object();
         private int _counter;
 
         public static UploadService GetInstance()
         {
             if (_instance == null)
-                _instance = new UploadService();
+            {
+                lock (_lock)
+                {
+                    if (_instance == null)
+                        _instance = new UploadService();
+                }
+            }
             return _instance;
         }
         public int TimesCalled()
